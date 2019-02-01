@@ -41,101 +41,21 @@ library(here)
 
 <!-- Replace the below with bit about you. -->
 ### Research Interests
-I am interested in policy made by unelected institutions within democracies, especially how activists and social movements influence bureaucratic policymaking in the United States.
-
-Methodologically, this means that I am trying to figure out how to measure policy change and identify its causes.
+My focus is on Presidential elections, and more specifically on how emotions and mental health affect voting behavior. Other interests include purple state politics, correct voting, elite decision-making and state politics of Wisconsin.
 
 ### Questions I hope to answer
-How do we distinguish grassroots and astroturf activism? Does either affect policy? When and why do Members of Congress lobby federal agencies? How do we measure policy change and attribute influence?
-
----
-
-### Methods
-Text analysis (reuse, topic models and other Bayesian classifiers, content analysis), various regression models including duration models, field experiments, and process tracing.
+How does anxiety affect information processing during elections? How do anxiety and depression affect voter turnout and vote choice? 
 
 ---
 
 ### Relevent data
 
-- Adam Bonica's DIME database of campaign contributions ( [data](https://data.stanford.edu/dime_) )
-
-- Jennifer Selin's data on agency inpendence ( [article](https://onlinelibrary.wiley.com/doi/abs/10.1111/ajps.12161) )
-
-- Charles Stewart's congressional committee membership data ( [data](http://web.mit.edu/17.251/www/data_page.html) )
+- American National Election Survey
 
 - U.S. Census
 
-- Mark Richards and Bert Kritzer's data on supreme court decisionmaking ( [article](https://www.cambridge.org/core/journals/american-political-science-review/article/jurisprudential-regimes-in-supreme-court-decision-making/E6367C1260F08FBD798DE09992E56534) ) 
 
 ---
-
-### Something cool
-
-Using DIME ideology scores (based on campaign donations):
-
-```{r DIME_data}
-## load data from a web address
-load(url("https://github.com/judgelord/state-level-DIME/raw/master/data/BonicaStateLevel.Rdata"))
-
-d %<>%
-  ## naming things! 
-  rename(Governor = gov_cf) %>% 
-  rename(Lower = l_cf_median) %>% 
-  rename(Upper = u_cf_median) %>%
-  mutate(party = ifelse(dist_1_x_zero == 0 & Governor < 0, "All Liberal", "Mixed")) %>% 
-  mutate(party = ifelse(dist_1_x_zero == 0 & Governor > 0, "All Conservative", party)) %>%
-  mutate(party = ifelse(is.na(dist_1_x_zero) & Governor > 0, "All Conservative", party)) %>%
-  ## identify min and max DIME scores for each state (each row is a state)
-  mutate(min = pmin(Governor, Lower, Upper, na.rm = T), 
-         max = pmax(Governor, Lower, Upper, na.rm = T) )
-```
-
-And a function for plotting them:
-```{r DIME_plot_function}
-## Define a function for plotting state-level DIME data with ggplot
-DIMEplot <- function(d){ 
-  d %>%
-    # define y as state for all layers
-  ggplot(aes(y = reorder(state, distance_1_gov_leg_med))) +
-    # x = lines for the distance between max and min actors
-  geom_segment(aes(x = min, 
-                   xend = max, 
-                   yend = reorder(state, distance_1_gov_leg_med)), 
-               color = "grey", 
-               size = 2.1, 
-               lineend = "round", 
-               alpha = .3) + 
-    # x = points for each actor
-  geom_point(aes(x = Governor, color = Governor), shape = "G") + 
-  geom_point(aes(x = Lower, color = Lower), shape = "L") + 
-  geom_point(aes(x = Upper, color = Upper), shape = "U") + 
-    # labels 
-  labs(y = "States by Preference Divergence", 
-       x = "Mean Ideology Score", 
-       title = paste("Preference Divergence of Political Principals,", unique(d$year) ), color = "") +
-    # scales
-  scale_x_continuous(breaks = c(-1, 0, 1)) + 
-  scale_colour_gradient2(low = "blue", mid = "black", high = "red") +
-    # facet by liberal, conservative, or mixed
-  facet_grid(party ~ ., scales = "free_y", space = "free_y") + 
-    # adjust text size and drop legend
-  theme(axis.text.y = element_text(size = 5), 
-        title = element_text(size = 7), 
-        legend.position = "none") 
-}
-
-```   
-
-We can compare alignment among governors (G) and upper (U) and lower (L) chambers of state legislatures between 2004 and 2008:
-```{r DIME-2003-2008-plots, fig.height = 5, fig.width = 3.1, fig.show='hold'}
-d %>% 
-  filter(year == 2004) %>% 
-  DIMEplot()
-
-d %>% 
-  filter(year == 2008) %>%
-  DIMEplot()
-```     
 
 
 
