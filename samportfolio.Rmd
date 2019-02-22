@@ -32,6 +32,8 @@ library(tidyverse)
 library(ggplot2); theme_set(theme_minimal())
 library(magrittr)
 library(here)
+library(foreign)
+library(haven)
 ```
 <!-- The above header sets everything up. -->
 
@@ -44,7 +46,9 @@ library(here)
 My focus is on Presidential elections, and more specifically on how emotions and mental health affect voting behavior. Other interests include purple state politics, correct voting, elite decision-making and state politics of Wisconsin.
 
 ### Questions I hope to answer
-How does anxiety affect information processing during elections? How do anxiety and depression affect voter turnout and vote choice? 
+How does anxiety affect information processing during elections? How does anxiety and depression affect voter turnout and vote choice? 
+
+How do religion and anxiety interact to influence voter behavior?
 
 ---
 
@@ -52,10 +56,17 @@ How does anxiety affect information processing during elections? How do anxiety 
 
 - American National Election Survey
 
-- U.S. Census
-
 
 ---
 
+###Summary of ANES
+```{r anes summary}
+anes2016<-read_dta("https://github.com/sdschutt13/data/raw/master/anes2016.dta")
 
+
+
+
+
+
+```
 
