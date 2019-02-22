@@ -68,11 +68,10 @@ d<-anes2016anx
 ```
 
 ```{r}
-filter
-mutate(anes2016, anxiety=mean(V161116, V161118, V161120))
-
-
-
-
+d<-mutate(d, anxietyD = ((angerD+ afraidD+ disgustD)/3))
+d<-mutate(d, anxietyR = ((angerR + afraidR + disgustR)/3))
+d<-mutate(d, enthD = ((proudD + hopefulD)/2))
+d<-mutate(d, enthR = ((proudR + hopefulR)/2))
+d
 ```
 
