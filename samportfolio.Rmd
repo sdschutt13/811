@@ -2,10 +2,10 @@
 title: "PS811 Portfolio"
 author: "Sam Schutt"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     code_folding: hide
+    toc: yes
+  pdf_document:
     toc: yes
 ---
 ```{r setup, include=FALSE}
