@@ -2,9 +2,11 @@
 title: "PS811 Portfolio"
 author: "Sam Schutt"
 output:
-  html_document: 
-    toc: true ## table of contents
+  pdf_document:
+    toc: yes
+  html_document:
     code_folding: hide
+    toc: yes
 ---
 ```{r setup, include=FALSE}
 ## Defaults for R chunks
