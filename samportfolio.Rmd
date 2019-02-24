@@ -45,18 +45,22 @@ library(haven)
 
 <!-- Replace the below with bit about you. -->
 ### Research Interests
-My focus is on Presidential elections, and more specifically on how emotions and mental health affect voting behavior. Other interests include purple state politics, correct voting, elite decision-making and state politics of Wisconsin.
+As an American Politics student, my interests are in the subfiel of political psychology broadly. Less-broad topics of study that I see in my future are the connection between emotions and voting behavior, decision-making processes, religion, information processing, and elite psychology. Another topic that is less of a research focus, but more of hobby and consumer is rural resentment and white-working class voting behavior. 
 
-### Questions I hope to answer
+### Current Research Project or Questions of Interest
 How does anxiety affect information processing during elections? How does anxiety and depression affect voter turnout and vote choice? 
 
 How do religion and anxiety interact to influence voter behavior?
+
+How does anxiety for Presidential candidates affect congressional perception?
+
+Anxiety and Correct Voting 
 
 ---
 
 ### Relevent data
 
-- American National Election Survey
+- [American National Election Survey](https://electionstudies.org/)
 
 
 ---
