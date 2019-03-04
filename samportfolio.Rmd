@@ -110,7 +110,7 @@ df$pidname%<>%fct_relevel("Strong Democrat", "Middle Democrat", "Lean Democrat",
 ```
 
 ```{r}
-df%>%ggplot(aes(pidname,anxietyCo)) +
+jitteranxietyCo<-df%>%ggplot(aes(pidname,anxietyCo)) +
   geom_jitter(aes(colour=pid3pt), width = 0.2, height=.2)+
   stat_summary(fun.y=mean, geom="point", shape=17,
                  size=5, color="gold2")+
@@ -124,4 +124,7 @@ df%>%ggplot(aes(pidname,anxietyCo)) +
   scale_colour_manual(name="",  
                       values = c("Dem"= "dodgerblue2", "Ind"="mediumpurple3", "Rep"="red3",
                                  "value3"="grey", "value2"="black"))
+ggsave("plotanxietyCo.png", jitteranxietyCo, width = 100, height = 200)
+jitteranxietyCo
+
 ```
