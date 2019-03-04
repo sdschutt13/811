@@ -109,7 +109,7 @@ df$pidname%<>%fct_relevel("Strong Democrat", "Middle Democrat", "Lean Democrat",
 
 ```
 
-```{r, fig.height=6, fig.width=9}
+```{r, fig.height=7, fig.width=9}
 df%>%ggplot(aes(pidname,anxietyCo)) +
   geom_jitter(aes(colour=pid3pt), width = 0.2, height=.2)+
   stat_summary(fun.y=mean, geom="point", shape=17,
