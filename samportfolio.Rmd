@@ -39,7 +39,6 @@ library(haven)
 
 
 
-
 <!-- Replace the below with bit about you. -->
 ### Research Interests
 As an American Politics student, my interests are in the subfield of political psychology broadly. Less-broad topics of study that I see in my future are the connection between emotions and voting behavior, decision-making processes, religion, information processing, and elite psychology. Another topic that is less of a research focus, but more of hobby and consumer is rural resentment and white-working class voting behavior. 
@@ -67,64 +66,62 @@ Anxiety and Correct Voting
 ##Loads in the data from github
 load(here("data/anes2016anx.Rdata"))
 d<-anes2016anx
-
+df<-zap_labels(d)
 ```
-
 
 
 
 ```{r}
 ##Creating indicators for Anxiety and Enthusiasm
 
-d<-mutate(d, anxietyD = ((angerD+ afraidD+ disgustD)/3)) #Creates Indicator for Respondent's Anxiety for the Democratic Candidate
-d<-mutate(d, anxietyR = ((angerR + afraidR + disgustR)/3)) #Creates Indicator for Respondent's Anxiety for the Republican Candidate
-d<-mutate(d, enthD = ((proudD + hopefulD)/2)) #Creates Indicator for Respondent's Enthusiasm for the Democratic Candidate
-d<-mutate(d, enthR = ((proudR + hopefulR)/2)) #Creates Indicator for Respondent's Enthusiasm for the Republican Candidate
+df<-mutate(df, anxietyD = ((angerD+ afraidD+ disgustD)/3)) #Creates Indicator for Respondent's Anxiety for the Democratic Candidate
+df<-mutate(df, anxietyR = ((angerR + afraidR + disgustR)/3)) #Creates Indicator for Respondent's Anxiety for the Republican Candidate
+df<-mutate(df, enthD = ((proudD + hopefulD)/2)) #Creates Indicator for Respondent's Enthusiasm for the Democratic Candidate
+df<-mutate(df, enthR = ((proudR + hopefulR)/2)) #Creates Indicator for Respondent's Enthusiasm for the Republican Candidate
+df<-mutate(df, anxietyI = ((angerD + angerR + afraidD + afraidR + disgustD +disgustD)/6)) #Creates indicator for Repondents Anxiety for combined
 
 ```
 
 ```{r clean}
 
-d%<>%filter(anxietyD>0, anxietyR>0, enthD>0, enthR>0, pid7pt>0)#clears out non-responses
+df%<>%filter(anxietyD>0, anxietyR>0, enthD>0, enthR>0, pid7pt>0)#clears out non-responses
 
-d%<>%mutate(pid3pt = ifelse(d$pid7pt%in%c(1, 2, 3), "Dem", "Rep"))#creates 3 point party id variable
-d%<>%mutate(pid3pt = ifelse(d$pid7pt%in%c(4),"Ind", pid3pt))#creates label for indep
+df%<>%mutate(pid3pt = ifelse(df$pid7pt%in%c(1, 2, 3), "Dem", "Rep"))#creates 3 point party id variable
+df%<>%mutate(pid3pt = ifelse(df$pid7pt%in%c(4),"Ind", pid3pt))#creates label for indep
 
-d%<>%mutate(anxietyCo = ifelse(d$pid3pt=="Dem", anxietyD, anxietyR))#Set anxiety for co partisans for Dems/Reps unidimension scale (70 anxiety for Clinton by Dem=70 Anxiety for Trump by rep)
-d%<>%mutate(anxietyCo = ifelse(d$pid3pt=="Ind", NA, anxietyCo))#Sets Independent anxiety NA for copartisans so na.omit rids
+df%<>%mutate(anxietyCo = ifelse(df$pid3pt=="Dem", anxietyD, anxietyR))#Set anxiety for co partisans for Dems/Reps unidimension scale (70 anxiety for Clinton by Dem=70 Anxiety for Trump by rep)
+df%<>%mutate(anxietyCo = ifelse(df$pid3pt=="Ind", anxietyI, anxietyCo))#Sets Independent anxiety NA for copartisans so na.omit rids
 
-d%<>%mutate(anxietyAnti = ifelse(d$pid3pt=="Dem", anxietyR, anxietyD))
-d%<>%mutate(anxietyAnti = ifelse(d$pid3pt=="Ind", NA, anxietyAnti))
+df%<>%mutate(anxietyAnti = ifelse(df$pid3pt=="Dem", anxietyR, anxietyD))
+df%<>%mutate(anxietyAnti = ifelse(df$pid3pt=="Ind", NA, anxietyAnti))
 
-d%<>%mutate(enthCo = ifelse(d$pid3pt=="Dem", enthD, enthR))
-d%<>%mutate(enthCo = ifelse(d$pid3pt=="Ind", NA, enthCo))
+df%<>%mutate(enthCo = ifelse(df$pid3pt=="Dem", enthD, enthR))
+df%<>%mutate(enthCo = ifelse(df$pid3pt=="Ind", NA, enthCo))
 
-d%<>%mutate(enthAnti = ifelse(d$pid3pt=="Dem", enthR, enthD))
-d%<>%mutate(enthAnti = ifelse(d$pid3pt=="Ind", NA, enthAnti))
+df%<>%mutate(enthAnti = ifelse(df$pid3pt=="Dem", enthR, enthD))
+df%<>%mutate(enthAnti = ifelse(df$pid3pt=="Ind", NA, enthAnti))
 
-d$pid7pt<-as.numeric(d$pid7pt)
-d$pidnum<-d$pid7pt
-d$pidname<-d$pidnum%<>%dplyr::recode(`1`="Strong Democrat", `2`="Middle Democrat", `3`="Lean Democrat", `4`="Independent", `5`="Lean Republican", `6`="Middle Republican", `7`="Strong Republican")
+df$pid7pt<-as.numeric(df$pid7pt)
+df$pidnum<-df$pid7pt
+df$pidname<-df$pidnum%<>%dplyr::recode(`1`="Strong Democrat", `2`="Middle Democrat", `3`="Lean Democrat", `4`="Independent", `5`="Lean Republican", `6`="Middle Republican", `7`="Strong Republican")
 
-d$pidname%<>%fct_relevel("Strong Democrat", "Middle Democrat", "Lean Democrat", "Independent", "Lean Republican", "Middle Republican", "Strong Republican")
+df$pidname%<>%fct_relevel("Strong Democrat", "Middle Democrat", "Lean Democrat", "Independent", "Lean Republican", "Middle Republican", "Strong Republican")
 
 ```
 
 ```{r}
-
-d%>%ggplot(aes(x=pidname, y=anxietyD))+
-          geom_smooth()
-
-d%>%ggplot(aes(x = pidname, y=anxietyD)) +
+df%>%ggplot(aes(pidname,anxietyCo)) +
+  geom_jitter(aes(colour=pid3pt), width = 0.2, height=.2)+
+  stat_summary(fun.y=mean, geom="point", shape=17,
+                 size=5, color="gold2")+
   labs(y = "Anxiety",
-       x = "Party Identification")+
-  geom_smooth(aes(y = anxietyR), method = loess) + 
+       x = "Party Identification")+ 
   theme_bw()+
-  labs(title="Anxiety and Partyu")+
+  labs(title="Anxiety for Copartisan Candidate")+
   theme(plot.title = element_text(hjust = 0.5))+
-  scale_colour_manual("", 
-                      breaks = c("Anx. Clinton", "Anx. Trump"),
-                      values = c("blue", "red")) +
   theme(legend.position="bottom")+
-  theme(plot.background = element_rect(colour = 'black', fill = 'white', size = 3, linetype='solid'))
+  theme(plot.background = element_rect(colour = 'black', fill = 'white', size = 3, linetype='solid'))+
+  scale_colour_manual(name="",  
+                      values = c("Dem"= "dodgerblue2", "Ind"="mediumpurple3", "Rep"="red3",
+                                 "value3"="grey", "value2"="black"))
 ```
