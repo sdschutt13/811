@@ -4,11 +4,6 @@ author: "Sam Schutt"
 output:
   html_document:
     code_folding: hide
-    toc: yes
-  pdf_document:
-    toc: yes
-editor_options: 
-  chunk_output_type: console
 ---
 ```{r setup, include=FALSE}
 ## Defaults for R chunks
@@ -107,7 +102,8 @@ d%<>%mutate(enthCo = ifelse(d$pid3pt=="Ind", NA, enthCo))
 d%<>%mutate(enthAnti = ifelse(d$pid3pt=="Dem", enthR, enthD))
 d%<>%mutate(enthAnti = ifelse(d$pid3pt=="Ind", NA, enthAnti))
 
-d$pidnum<-as.numeric(d$pid7pt)
+d$pid7pt<-as.numeric(d$pid7pt)
+d$pidnum<-d$pid7pt
 d$pidname<-d$pidnum%<>%dplyr::recode(`1`="Strong Democrat", `2`="Middle Democrat", `3`="Lean Democrat", `4`="Independent", `5`="Lean Republican", `6`="Middle Republican", `7`="Strong Republican")
 
 d$pidname%<>%fct_relevel("Strong Democrat", "Middle Democrat", "Lean Democrat", "Independent", "Lean Republican", "Middle Republican", "Strong Republican")
@@ -124,7 +120,7 @@ d%>%ggplot(aes(x = pidname, y=anxietyD)) +
        x = "Party Identification")+
   geom_smooth(aes(y = anxietyR), method = loess) + 
   theme_bw()+
-  labs(title="Figure 2: Anxiety and PID Regression")+
+  labs(title="Anxiety and Partyu")+
   theme(plot.title = element_text(hjust = 0.5))+
   scale_colour_manual("", 
                       breaks = c("Anx. Clinton", "Anx. Trump"),
